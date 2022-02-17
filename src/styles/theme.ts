@@ -3,7 +3,7 @@ export default {
         header: '#1B1B1F',
 
         background_primary: '#F4F5F6',
-        background_secondary: '#E5E5E5',
+        background_secondary: '#FFFFFF',
         
         line: '#EBEBF0',
 
