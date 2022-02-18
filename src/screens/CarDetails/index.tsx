@@ -24,8 +24,10 @@ import { Container,
   Period, 
   Price, 
   About, 
-  Accessories
+  Accessories,
+  Footer
 } from './styles';
+import { Button } from '../../components/Button';
 
 export const CarDetails = () => {
   return <Container>
@@ -61,7 +63,10 @@ export const CarDetails = () => {
           É um belíssimo carro para quem gosta de acelerar.
         </About>
       </Content>
-      
+
+      <Footer>
+        <Button title='Escolher período do aluguel' onPress={()=>{}}/>
+      </Footer>
   </Container>;
 }
 
