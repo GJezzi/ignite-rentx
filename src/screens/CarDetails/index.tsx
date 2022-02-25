@@ -1,4 +1,10 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp} from '@react-navigation/native-stack'
+
+import { RootsParamList } from '../../@types/navigation';
+
+import { Button } from '../../components/Button';
 import { Accessory } from '../../components/Accessory';
 
 import { BackButton } from '../../components/BackButton';
@@ -10,7 +16,6 @@ import forceSvg from '../../assets/force.svg';
 import gasSvg from '../../assets/gasoline.svg';
 import gearSvg from '../../assets/exchange.svg';;
 import peopleSvg from '../../assets/people.svg';;
-
 
 import { Container, 
   Header, 
@@ -27,9 +32,17 @@ import { Container,
   Accessories,
   Footer
 } from './styles';
-import { Button } from '../../components/Button';
+
+
+type CarDetailsScreenNavigationProp = NativeStackNavigationProp<RootsParamList, 'CarDetails'>;
 
 export const CarDetails = () => {
+  const navigation = useNavigation<CarDetailsScreenNavigationProp>();
+
+  const handleRentalPeriod = () => {
+    navigation.navigate('Schedule');
+  }
+
   return <Container>
       <Header>
           <BackButton onPress={() =>{}}/>
@@ -65,7 +78,7 @@ export const CarDetails = () => {
       </Content>
 
       <Footer>
-        <Button title='Escolher período do aluguel' onPress={()=>{}}/>
+        <Button title='Escolher período do aluguel' onPress={handleRentalPeriod}/>
       </Footer>
   </Container>;
 }

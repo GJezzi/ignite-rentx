@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp} from '@react-navigation/native-stack'
 import { Feather } from '@expo/vector-icons'
 import { RFValue } from 'react-native-responsive-fontsize';
 
@@ -7,12 +9,16 @@ import { BackButton } from '../../components/BackButton';
 import { ImageSlider } from '../../components/ImageSlider';
 import { Button } from '../../components/Button';
 
+import { RootsParamList } from '../../@types/navigation';
+
 import speedSvg from '../../assets/speed.svg';
 import accelSvg from '../../assets/acceleration.svg';
 import forceSvg from '../../assets/force.svg';
 import gasSvg from '../../assets/gasoline.svg';
-import gearSvg from '../../assets/exchange.svg';;
-import peopleSvg from '../../assets/people.svg';;
+import gearSvg from '../../assets/exchange.svg';
+import peopleSvg from '../../assets/people.svg';
+
+import theme from '../../styles/theme';
 
 import { Container, 
   Header, 
@@ -38,9 +44,16 @@ import { Container,
   RentalPriceTotal,
   Footer
 } from './styles';
-import theme from '../../styles/theme';
+
+type ScheduleDetailsScreenNavProps = NativeStackNavigationProp<RootsParamList, 'ScheduleDetails'>;
 
 export const ScheduleDetails = () => {
+  const navigation = useNavigation<ScheduleDetailsScreenNavProps>();
+
+  const handleConfirmRental = () => {
+    navigation.navigate('ScheduleComplete');
+  }
+
   return <Container>
       <Header>
           <BackButton onPress={() =>{}}/>
@@ -103,7 +116,7 @@ export const ScheduleDetails = () => {
         </RentalPrice>
       </Content>
       <Footer>
-        <Button title='Escolher período do aluguel' onPress={()=>{}}/>
+        <Button title='Alugar agora' onPress={handleConfirmRental} color={theme.colors.success}/>
       </Footer>
   </Container>;
 }
