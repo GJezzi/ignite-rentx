@@ -45,7 +45,7 @@ export const CarDetails = () => {
 
   return <Container>
       <Header>
-          <BackButton onPress={() =>{}}/>
+          <BackButton onPress={() => navigation.goBack()}/>
       </Header>
       <CarImages>
         <ImageSlider imagesUrl={['https://e7.pngegg.com/pngimages/49/600/png-clipart-black-audi-convertible-coupe-2018-audi-a5-convertible-car-audi-s5-audi-a5-cabrio-black-car-convertible-car.png']}/>
