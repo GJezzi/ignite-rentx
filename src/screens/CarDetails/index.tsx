@@ -1,8 +1,8 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp} from '@react-navigation/native-stack'
 
-import { RootsParamList } from '../../@types/navigation';
+import { RootsStackParamList } from '../../@types/navigation';
 
 import { Button } from '../../components/Button';
 import { Accessory } from '../../components/Accessory';
@@ -10,12 +10,8 @@ import { Accessory } from '../../components/Accessory';
 import { BackButton } from '../../components/BackButton';
 import { ImageSlider } from '../../components/ImageSlider';
 
-import speedSvg from '../../assets/speed.svg';
-import accelSvg from '../../assets/acceleration.svg';
-import forceSvg from '../../assets/force.svg';
-import gasSvg from '../../assets/gasoline.svg';
-import gearSvg from '../../assets/exchange.svg';;
-import peopleSvg from '../../assets/people.svg';;
+import { getAccessoryIcon } from '../../utils/getAccessoryIcon';
+import { CarDTO } from '../../dtos/CarDTO';
 
 import { Container, 
   Header, 
@@ -33,50 +29,54 @@ import { Container,
   Footer
 } from './styles';
 
+type CarDetailsScreenNavigationProp = NativeStackNavigationProp<RootsStackParamList, 'CarDetails'>;
+type CarDetailsScreenRouteProp = RouteProp<RootsStackParamList, 'CarDetails'>;
 
-type CarDetailsScreenNavigationProp = NativeStackNavigationProp<RootsParamList, 'CarDetails'>;
+interface Params {
+  car: CarDTO
+}
 
 export const CarDetails = () => {
   const navigation = useNavigation<CarDetailsScreenNavigationProp>();
+  const route = useRoute<CarDetailsScreenRouteProp>();
+  const { car } = route.params as Params;
 
   const handleRentalPeriod = () => {
-    navigation.navigate('Schedule');
+    navigation.navigate('Schedule' , { car });
+  }
+
+  const handleGoBack = () => {
+    navigation.goBack();
   }
 
   return <Container>
       <Header>
-          <BackButton onPress={() => navigation.goBack()}/>
+          <BackButton onPress={handleGoBack}/>
       </Header>
       <CarImages>
-        <ImageSlider imagesUrl={['https://e7.pngegg.com/pngimages/49/600/png-clipart-black-audi-convertible-coupe-2018-audi-a5-convertible-car-audi-s5-audi-a5-cabrio-black-car-convertible-car.png']}/>
+        <ImageSlider imagesUrl={car.photos}/>
       </CarImages>
       <Content>
         <Details>
           <Description>
-            <Brand>Lamborghini</Brand>
-            <Name>Huracan</Name>
+            <Brand>{car.brand}</Brand>
+            <Name>{car.name}</Name>
           </Description>
           <Rent>
-            <Period>Ao dia</Period>
-            <Price>R$ 580</Price>
+            <Period>{car.rent.period}</Period>
+            <Price>R$ {car.rent.price}</Price>
           </Rent>
         </Details>
         <Accessories>
-          <Accessory name='380km/h' icon={speedSvg}/> 
-          <Accessory name='3.2s' icon={accelSvg}/> 
-          <Accessory name='800 HP' icon={forceSvg}/> 
-          <Accessory name='Gasolina' icon={gasSvg}/> 
-          <Accessory name='Auto' icon={gearSvg}/> 
-          <Accessory name='2 pessoas' icon={peopleSvg}/> 
+          {car.accessories.map((accessory) => (
+            <Accessory key={accessory.type} name={accessory.name} icon={getAccessoryIcon(accessory.type)}/> 
+            ))
+          }
         </Accessories>
-        
         <About>
-          Este é automóvel desportivo. 
-          Surgiu do lendário touro de lide indultado na praça Real Maestranza de Sevilla. 
-          É um belíssimo carro para quem gosta de acelerar.
+         {car.about}
         </About>
       </Content>
-
       <Footer>
         <Button title='Escolher período do aluguel' onPress={handleRentalPeriod}/>
       </Footer>

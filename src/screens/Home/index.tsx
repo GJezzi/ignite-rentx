@@ -1,32 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'react-native';
+import React, { useEffect, useState } from 'react';import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from 'styled-components'
 import { NativeStackNavigationProp} from '@react-navigation/native-stack'
-import { RFValue} from 'react-native-responsive-fontsize'
+import { RFValue } from 'react-native-responsive-fontsize';
+import { Ionicons } from '@expo/vector-icons'
 
-import { RootsParamList } from '../../@types/navigation';
+import { RootsStackParamList } from '../../@types/navigation';
+
+import Logo from '../../assets/logo.svg'
+
+import { Car } from '../../components/Car'
+import { Load } from '../../components/Load'
 
 import { CarDTO } from '../../dtos/CarDTO';
 
 import { api } from '../../services/api';
 
-import { Car } from '../../components/Car'
-import { Load } from '../../components/Load'
+import { Container, Header, TotalCars, HeaderContent, CarList, MyCarsFloatButton } from './styles';
 
-import Logo from '../../assets/logo.svg'
-
-import { Container, Header, TotalCars, HeaderContent, CarList } from './styles';
-
-type HomeScreenNavigationProp = NativeStackNavigationProp<RootsParamList, 'Home'>;
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootsStackParamList, 'Home'>;
 
 export const Home = () => {
+  const theme = useTheme();
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const handleCarDetails = () => {
-    navigation.navigate('CarDetails');
+  const handleCarDetails = (car: CarDTO) => {
+    navigation.navigate('CarDetails', { car });
   };
+
+  const handleOpenMyCars = () => {
+    navigation.navigate('MyCars');
+  }
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -60,9 +66,12 @@ export const Home = () => {
           <CarList
             data={cars}
             keyExtractor={item => item.id}
-            renderItem={({ item }) => <Car data={item} onPress={handleCarDetails} />}
+            renderItem={({ item }) => <Car data={item} onPress={() => handleCarDetails(item)} />}
           />
         }
+        <MyCarsFloatButton onPress={handleOpenMyCars}>
+          <Ionicons name='ios-car-sport' size={32} color={theme.colors.white}/>
+        </MyCarsFloatButton>
     </Container>
   )
 }
