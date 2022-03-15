@@ -78,7 +78,7 @@ export const CarDetails = () => {
         </About>
       </Content>
       <Footer>
-        <Button title='Escolher período do aluguel' onPress={handleRentalPeriod}/>
+        <Button title='Escolher período do aluguel' onPress={handleRentalPeriod} />
       </Footer>
   </Container>;
 }

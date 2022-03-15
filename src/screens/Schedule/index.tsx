@@ -53,14 +53,10 @@ export const Schedule: React.FC = () => {
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriodProps>({} as RentalPeriodProps);
 
   const handleRentalConfirm = () => {
-    if(!rentalPeriod.starDateFormatted || !rentalPeriod.endDateFormatted) {
-      Alert.alert('Selecione o período de aluguel.');
-    } else {
-      navigation.navigate('ScheduleDetails', {
-        car,
-        dates: Object.keys(markedDates),
-      });
-    }
+    navigation.navigate('ScheduleDetails', {
+      car,
+      dates: Object.keys(markedDates),
+    });
   }
 
   const handleGoBack = () => {
@@ -91,12 +87,12 @@ export const Schedule: React.FC = () => {
 
   return (
     <Container>
-      <StatusBar 
-        barStyle='light-content' 
-        backgroundColor='transparent' 
-        translucent
-      />
       <Header>
+        <StatusBar 
+          barStyle='light-content' 
+          backgroundColor='transparent' 
+          translucent
+        />
         <BackButton color={theme.colors.white} onPress={handleGoBack}/>
         <Title>
           Escolha uma{'\n'}data de início e{'\n'}fim do aluguel
@@ -121,7 +117,11 @@ export const Schedule: React.FC = () => {
         />
       </Content>
       <Footer>
-        <Button title='Confirmar' onPress={handleRentalConfirm}/>
+        <Button 
+          title='Confirmar' 
+          onPress={handleRentalConfirm}
+          enabled={!!rentalPeriod.starDateFormatted}
+        />
       </Footer>
     </Container>
   )

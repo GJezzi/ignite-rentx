@@ -44,7 +44,6 @@ import { Container,
   Footer
 } from './styles';
 
-
 type ScheduleDetailsScreenNavProps = NativeStackNavigationProp<RootsStackParamList, 'ScheduleDetails'>;
 type ScheduleDetailsRouteProps = RouteProp<RootsStackParamList, 'ScheduleDetails'>
 
@@ -54,7 +53,7 @@ interface Params {
 }
 
 interface RentalPeriod {
-  starDate: string;
+  startDate: string;
   endDate: string;
 }
 
@@ -63,11 +62,13 @@ export const ScheduleDetails = () => {
   const route = useRoute<ScheduleDetailsRouteProps>();
   const { car, dates } = route.params as Params;
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
 
   const rentTotal = Number(dates.length * car.rent.price)
 
   const handleConfirmRental = async () => {
+    setIsLoading(true);
     const response = await api.get(`/schedules_bycars/${car.id}`);
     const unavailable_dates = [
       ...response.data.unavailable_dates,
@@ -76,7 +77,9 @@ export const ScheduleDetails = () => {
 
     await api.post('/schedules_byuser', {
       user_id: 1,
-      car
+      car,
+      startDate: format(getDate(new Date(dates[0])), 'dd/MM/yyyy'),
+      endDate: format(getDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy'),
     })
 
     api.put(`/schedules_bycars/${car.id}`, {
@@ -84,7 +87,10 @@ export const ScheduleDetails = () => {
       unavailable_dates
     })
     .then(() => navigation.navigate('ScheduleComplete'))
-    .catch(() => Alert.alert('Não foi possível efetuar o agendamento'))
+    .catch(() => {
+      setIsLoading(false);
+      Alert.alert('Não foi possível efetuar o agendamento');
+    });
   }
 
   const handleGoBack = () => {
@@ -94,7 +100,7 @@ export const ScheduleDetails = () => {
 
   useEffect(() => {
     setRentalPeriod({
-      starDate: format(getDate(new Date(dates[0])), 'dd/MM/yyyy'),
+      startDate: format(getDate(new Date(dates[0])), 'dd/MM/yyyy'),
       endDate: format(getDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy'),
     })
   }, [])
@@ -134,7 +140,7 @@ export const ScheduleDetails = () => {
               DE
             </DateTitle>
             <DateValue>
-              {rentalPeriod.starDate}
+              {rentalPeriod.startDate}
             </DateValue>
           </DateInfo>
 
@@ -159,7 +165,13 @@ export const ScheduleDetails = () => {
         </RentalPrice>
       </Content>
       <Footer>
-        <Button title='Alugar agora' onPress={handleConfirmRental} color={theme.colors.success}/>
+        <Button 
+          title='Alugar agora' 
+          onPress={handleConfirmRental} 
+          color={theme.colors.success} 
+          enabled={!isLoading}
+          isLoading={isLoading}
+        />
       </Footer>
   </Container>;
 }
