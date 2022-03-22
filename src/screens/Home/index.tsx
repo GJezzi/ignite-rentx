@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';import { StatusBar } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StatusBar } from 'react-native';
+import { PanGestureHandler, RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme } from 'styled-components'
-import { NativeStackNavigationProp} from '@react-navigation/native-stack'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import Animated, { event, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { useTheme } from 'styled-components';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons';
 
 import { RootsStackParamList } from '../../@types/navigation';
 
@@ -16,15 +19,41 @@ import { CarDTO } from '../../dtos/CarDTO';
 
 import { api } from '../../services/api';
 
-import { Container, Header, TotalCars, HeaderContent, CarList, MyCarsFloatButton } from './styles';
+import { Container, Header, TotalCars, HeaderContent, CarList, styles } from './styles';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootsStackParamList, 'Home'>;
+
+const AnimatedButton = Animated.createAnimatedComponent(RectButton);
 
 export const Home = () => {
   const theme = useTheme();
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const positionY = useSharedValue(0);
+  const positionX = useSharedValue(0);
+
+  const myCarsFloatButtonStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateY: positionY.value },
+        { translateX: positionX.value }
+      ]
+    }
+  });
+
+  const onGestureEvent = useAnimatedGestureHandler({
+    onStart(_, ctx: any){
+      ctx.positionX = positionX.value;
+      ctx.positionY = positionY.value;
+    },
+    onActive(event, ctx: any){
+      positionX.value = ctx.positionX + event.translationX;
+      positionY.value = ctx.positionY + event.translationY;
+    },
+    onEnd(){}
+  });
 
   const handleCarDetails = (car: CarDTO) => {
     navigation.navigate('CarDetails', { car });
@@ -59,7 +88,7 @@ export const Home = () => {
         <Header>
           <HeaderContent>
             <Logo width={RFValue(108)} height={RFValue(12)}/>
-            <TotalCars>Total de 12 carros</TotalCars>
+            <TotalCars>Total de {cars.length} carros</TotalCars>
           </HeaderContent>
         </Header>
         {loading ? <Load/> :
@@ -69,9 +98,19 @@ export const Home = () => {
             renderItem={({ item }) => <Car data={item} onPress={() => handleCarDetails(item)} />}
           />
         }
-        <MyCarsFloatButton onPress={handleOpenMyCars}>
-          <Ionicons name='ios-car-sport' size={32} color={theme.colors.white}/>
-        </MyCarsFloatButton>
+        <PanGestureHandler onGestureEvent={onGestureEvent} >
+          <Animated.View style={[myCarsFloatButtonStyle, styles.floatButtonView]}>
+            <AnimatedButton onPress={handleOpenMyCars} style={styles.floatButtonStyle}>
+              <Ionicons 
+                name='ios-car-sport' 
+                size={32} 
+                color={theme.colors.white}
+              />
+            </AnimatedButton>
+          </Animated.View>
+        </PanGestureHandler>
+        
+        
     </Container>
   )
 }

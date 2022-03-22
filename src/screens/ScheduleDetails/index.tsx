@@ -105,7 +105,8 @@ export const ScheduleDetails = () => {
     })
   }, [])
   
-  return <Container>
+  return (
+    <Container>
       <Header>
           <BackButton onPress={handleGoBack}/>
       </Header>
@@ -173,6 +174,7 @@ export const ScheduleDetails = () => {
           isLoading={isLoading}
         />
       </Footer>
-  </Container>;
+    </Container>
+  )
 }
 

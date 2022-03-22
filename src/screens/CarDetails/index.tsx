@@ -1,6 +1,9 @@
 import React from 'react';
+import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { StatusBar } from 'react-native';
+import { useTheme } from 'styled-components';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { NativeStackNavigationProp} from '@react-navigation/native-stack'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 import { RootsStackParamList } from '../../@types/navigation';
 
@@ -15,8 +18,7 @@ import { CarDTO } from '../../dtos/CarDTO';
 
 import { Container, 
   Header, 
-  CarImages, 
-  Content, 
+  CarImages,  
   Details, 
   Description, 
   Brand, 
@@ -39,7 +41,35 @@ interface Params {
 export const CarDetails = () => {
   const navigation = useNavigation<CarDetailsScreenNavigationProp>();
   const route = useRoute<CarDetailsScreenRouteProp>();
+  const theme = useTheme();
+
   const { car } = route.params as Params;
+  const scrollY = useSharedValue(0);
+  
+  const scrollHandler = useAnimatedScrollHandler(event =>{
+    scrollY.value = event.contentOffset.y
+  });
+
+  const headerStyleAnimation = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        scrollY.value,
+        [0, 200],
+        [200, 70],
+        Extrapolate.CLAMP
+      )
+    }
+  });
+
+  const sliderCarsStyleAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        scrollY.value,
+        [0, 150],
+        [1, 0]
+      )
+    }
+  })
 
   const handleRentalPeriod = () => {
     navigation.navigate('Schedule' , { car });
@@ -49,14 +79,37 @@ export const CarDetails = () => {
     navigation.goBack();
   }
 
-  return <Container>
-      <Header>
+  return (
+    <Container>
+      <StatusBar 
+        barStyle='dark-content'
+        backgroundColor='transparent' 
+        translucent
+      />
+
+      <Animated.View style={[
+        headerStyleAnimation, {
+          backgroundColor: theme.colors.background_secondary
+        }]} >
+        <Header>
           <BackButton onPress={handleGoBack}/>
-      </Header>
-      <CarImages>
-        <ImageSlider imagesUrl={car.photos}/>
-      </CarImages>
-      <Content>
+        </Header>
+        <Animated.View style={[sliderCarsStyleAnimation]}>
+          <CarImages>
+            <ImageSlider imagesUrl={car.photos}/>
+          </CarImages>
+        </Animated.View>
+      </Animated.View>
+      
+      <Animated.ScrollView 
+        contentContainerStyle={{
+          paddingHorizontal: 24,
+          alignItems: 'center',
+        }}
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+      >
         <Details>
           <Description>
             <Brand>{car.brand}</Brand>
@@ -74,12 +127,14 @@ export const CarDetails = () => {
           }
         </Accessories>
         <About>
-         {car.about}
+          {car.about}
         </About>
-      </Content>
+      </Animated.ScrollView>
+
       <Footer>
         <Button title='Escolher período do aluguel' onPress={handleRentalPeriod} />
       </Footer>
-  </Container>;
+    </Container>
+  )
 }
 

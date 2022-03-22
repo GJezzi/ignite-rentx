@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
-import {Dimensions} from 'react-native'
+import { Dimensions, FlatList } from 'react-native'
+
 
 interface ImageIndexProps {
     active: boolean;
@@ -37,3 +38,5 @@ export const CarImage = styled.Image`
     width: 280px;
     height: 132px;
 `;
+
+export const CarImagesList = styled(FlatList)``;
