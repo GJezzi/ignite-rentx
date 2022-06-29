@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons'
 
 import { BackButton } from '../../components/BackButton';
 import { Car } from '../../components/Car';
-import { Load } from '../../components/Load';
+import { LoadAnimation } from '../../components/LoadAnimation';
 
 import { CarDTO } from '../../dtos/CarDTO';
 
@@ -77,13 +77,12 @@ export const MyCars = () => {
           Conforto, segurança e praticidade.
         </Subtitle>
       </Header>
-      <Content>
-        <Appointments>
-          <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>
-          <AppointmentsQuantity>{cars.length}</AppointmentsQuantity>
-        </Appointments>
-
-        {isLoading ? <Load/> : 
+      {isLoading ? <LoadAnimation/> : 
+        <Content>
+          <Appointments>
+            <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>
+            <AppointmentsQuantity>{cars.length}</AppointmentsQuantity>
+          </Appointments>
           <AppointmentsList
             data={cars}
             keyExtractor={item => item.id}
@@ -93,7 +92,7 @@ export const MyCars = () => {
                 <Car data={item.car} />
                 <CarFooter>
                   <CarFooterTitle>Período</CarFooterTitle>
-                  <CarFooterPeriod>
+                    <CarFooterPeriod>
                     <CarFooterDate>{item.startDate}</CarFooterDate>
                     <AntDesign 
                       name='arrowright' 
@@ -107,8 +106,8 @@ export const MyCars = () => {
               </CarWrapper>
             }
           />
-        }
-      </Content>
+        </Content>
+      }
     </Container>
   );
 }

@@ -3,7 +3,6 @@ import { FlatList, FlatListProps, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import { CarDTO } from '../../dtos/CarDTO';
-import { RectButton } from 'react-native-gesture-handler';
 
 import theme from '../../styles/theme';
 
