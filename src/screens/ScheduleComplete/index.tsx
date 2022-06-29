@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp} from '@react-navigation/native-stack'
 import { StatusBar, useWindowDimensions } from 'react-native';
 
-import { RootsParamList } from '../../@types/navigation';
+import { RootsStackParamList } from '../../@types/navigation';
 
 import { ConfirmButton } from '../../components/ConfirmButton';
 import LogoSvg from '../../assets/logo_background_gray.svg';
@@ -11,7 +11,7 @@ import SuccessSvg from '../../assets/done.svg';
 
 import { Container, Content, Title, Message, Footer } from './styles';
 
-type ScheduleCompleteScreenNavProps = NativeStackNavigationProp<RootsParamList, 'ScheduleComplete'>;
+type ScheduleCompleteScreenNavProps = NativeStackNavigationProp<RootsStackParamList, 'ScheduleComplete'>;
 
 export const ScheduleComplete = () => {
   const navigation  = useNavigation<ScheduleCompleteScreenNavProps>();

@@ -8,6 +8,8 @@ import { ScheduleDetails } from '../screens/ScheduleDetails';
 import { ScheduleComplete } from '../screens/ScheduleComplete';
 import { MyCars } from '../screens/MyCars'
 import { Splash } from '../screens/Splash';
+import { SignIn } from '../screens/SignIn';
+
 
 import { RootsStackParamList } from '../@types/navigation';
 
@@ -15,10 +17,11 @@ export const StackRoutes = () => {
   const { Navigator, Screen } = createNativeStackNavigator<RootsStackParamList>();
 
   return (
-    <Navigator initialRouteName='Splash' screenOptions={{
+    <Navigator initialRouteName='SignIn' screenOptions={{
       headerShown: false
     }}>
       <Screen name='Splash' component={Splash} />
+      <Screen name='SignIn' component={SignIn} />
       <Screen name='Home' component={Home} options={{gestureEnabled: false}} />
       <Screen name='CarDetails' component={CarDetails} />
       <Screen name='Schedule' component={Schedule} />
