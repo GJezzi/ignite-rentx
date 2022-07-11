@@ -3,13 +3,10 @@ import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components';
 import { RectButtonProps } from 'react-native-gesture-handler';
 
-
 import { Container, Title } from './styles';
-
 interface Props extends RectButtonProps {
 	title: string;
 	color?: string;
-  enabled?: boolean;
   loading?: boolean;
   light?: boolean
 }
