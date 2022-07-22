@@ -86,7 +86,11 @@ export const ScheduleDetails = () => {
       id: car.id,
       unavailable_dates
     })
-    .then(() => navigation.navigate('ScheduleComplete'))
+    .then(() => navigation.navigate('ConfirmationScreen', {
+      title: 'Carro alugado!',
+      message: `Agora você só precisa ir\naté a concessionária da RENTX\npegar seu automóvel`,
+      nextScreenRoute: 'Home',
+    }))
     .catch(() => {
       setIsLoading(false);
       Alert.alert('Não foi possível efetuar o agendamento');
@@ -171,7 +175,7 @@ export const ScheduleDetails = () => {
           onPress={handleConfirmRental} 
           color={theme.colors.success} 
           enabled={!isLoading}
-          isLoading={isLoading}
+          loading={isLoading}
         />
       </Footer>
     </Container>

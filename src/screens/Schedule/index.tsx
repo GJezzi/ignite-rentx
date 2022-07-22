@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp} from '@react-navigation/native-stack'
 import { format } from 'date-fns';

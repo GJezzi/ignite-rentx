@@ -1,7 +1,15 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, StatusBar, Alert } from 'react-native';
+import { 
+  TouchableWithoutFeedback,
+  Keyboard, 
+  KeyboardAvoidingView, 
+  StatusBar, 
+  Alert 
+} from 'react-native';
 import * as Yup from 'yup';
-
+import { RootsStackParamList } from '../../@types/navigation';
 
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input';
@@ -17,9 +25,17 @@ import {
   Form 
 } from './styles';
 
+type SignInNavigationProp = NativeStackNavigationProp<RootsStackParamList, 'SignIn'>;
+
 export const SignIn = () => {
+  const navigation = useNavigation<SignInNavigationProp>();
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const handleSignUp = () => { 
+    navigation.navigate('SignUpFirstStep');
+  };
 
   const handleSignIn = async () => { 
     try {
@@ -73,8 +89,18 @@ export const SignIn = () => {
               />
             </Form>
             <Footer>
-              <Button title='Login' onPress={handleSignIn} enabled={true} loading={false}/>
-              <Button title='Criar conta gratuita' onPress={() => {}} color={theme.colors.background_secondary} light/>
+              <Button 
+                title='Login' 
+                onPress={handleSignIn} 
+                enabled={true} 
+                loading={false}
+              />
+              <Button 
+                title='Criar conta gratuita' 
+                onPress={handleSignUp} 
+                color={theme.colors.background_secondary} 
+                light
+              />
             </Footer>
         </Container>
       </TouchableWithoutFeedback>

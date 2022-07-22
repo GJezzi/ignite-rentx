@@ -9,7 +9,7 @@ interface InputProps {
 
 export const Container = styled.View`
   flex-direction: row;
-  width: 100%;
+  margin-bottom: 8px;
 `;
 
 export const IconContainer = styled.View<InputProps>`
@@ -25,7 +25,6 @@ export const IconContainer = styled.View<InputProps>`
     border-bottom-color: ${theme.colors.main};
   `}
 `;
-
 
 export const InputText = styled(TextInput)<InputProps>`
   flex: 1;
