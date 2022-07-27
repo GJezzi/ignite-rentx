@@ -8,6 +8,8 @@ import {
   StatusBar, 
   Alert 
 } from 'react-native';
+
+import { useAuth } from '../../hooks/auth'
 import * as Yup from 'yup';
 import { RootsStackParamList } from '../../@types/navigation';
 
@@ -30,6 +32,8 @@ type SignInNavigationProp = NativeStackNavigationProp<RootsStackParamList, 'Sign
 export const SignIn = () => {
   const navigation = useNavigation<SignInNavigationProp>();
 
+  const { signIn } = useAuth();
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -49,6 +53,7 @@ export const SignIn = () => {
   
       await schema.validate({email, password});
 
+      signIn({ email, password });
     } catch (error) {
       if(error instanceof Yup.ValidationError) {
         Alert.alert('Opa!', error.message);
