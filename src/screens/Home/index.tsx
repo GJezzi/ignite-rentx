@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, BackHandler } from 'react-native';
+import { StatusBar } from 'react-native';
 import { PanGestureHandler, RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Animated, { event, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useTheme } from 'styled-components';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Ionicons } from '@expo/vector-icons';
@@ -76,15 +76,7 @@ export const Home = () => {
     }
     fetchCars();
   }, [])
-
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      return true;
-    }) 
-  }, []);
   
-  
-
   return( 
     <Container>
       <StatusBar 
