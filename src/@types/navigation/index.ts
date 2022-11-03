@@ -23,5 +23,6 @@ export type RootsStackParamList = {
     message: string;
     nextScreenRoute: string;
   };
-  MyCars: undefined
+  MyCars: undefined;
+  Profile: undefined;
 }

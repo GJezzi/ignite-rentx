@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'styled-components';
 
@@ -8,12 +9,10 @@ import HomeSvg from '../assets/home.svg';
 import ProfileSvg from '../assets/people.svg';
 import CarSvg from '../assets/car.svg';
 
-
-import { Home } from '../screens/Home';
 import { MyCars } from '../screens/MyCars'
+import { Profile } from '../screens/Profile';
 
 import {AppStackRoutes} from './app.stack.routes'
-import { Platform } from 'react-native';
 
 export const AppTabRoutes = () => {
   const { Navigator, Screen } = createBottomTabNavigator<RootsStackParamList>();
@@ -53,7 +52,7 @@ export const AppTabRoutes = () => {
       />
       <Screen 
         name='Profile' 
-        component={Home}
+        component={Profile}
         options={{
           tabBarIcon: (({ color }) => (
             <ProfileSvg width={24} height={24} fill={color}/>
