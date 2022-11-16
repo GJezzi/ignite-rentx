@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -7,6 +8,8 @@ import {
 
 import { useNavigation } from "@react-navigation/native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+
+import * as Yup from "yup";
 
 import * as ImagePicker from "expo-image-picker";
 import Feather from "@expo/vector-icons/Feather";
@@ -17,6 +20,7 @@ import { useAuth } from "../../hooks/auth";
 import { BackButton } from "../../components/BackButton";
 import { Input } from "../../components/Input";
 import { PasswordInput } from "../../components/PasswordInput";
+import { Button } from "../../components/Button";
 
 import {
   Container,
@@ -37,7 +41,8 @@ import {
 export const Profile = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { user, signOut } = useAuth();
+
+  const { user, signOut, updateUser } = useAuth();
 
   const [option, setOption] = useState<"dataEdit" | "passwordEdit">("dataEdit");
   const [avatar, setAvatar] = useState<string>(user.avatar);
@@ -66,6 +71,55 @@ export const Profile = () => {
     }
   };
 
+  const handleProfileUpdate = async () => {
+    try {
+      const schema = Yup.object().shape({
+        name: Yup.string().required("Nome é obrigatório"),
+        driverLicense: Yup.string().required("CNH é obrigatória"),
+      });
+
+      const data = { name, driverLicense };
+      await schema.validate(data);
+
+      await updateUser({
+        id: user.id,
+        user_id: user.user_id,
+        email: user.email,
+        name,
+        driver_license: driverLicense,
+        avatar,
+        token: user.token,
+      });
+
+      Alert.alert("Perfil atualizado");
+    } catch (error) {
+      if (error) {
+        Alert.alert("Opa!", error.message);
+      } else {
+        Alert.alert("Não foi possível atualizar o perfil");
+      }
+    }
+  };
+
+  const handleSignOut = async () => {
+    Alert.alert(
+      "Tem certeza?",
+      "Ao sair precisará de internet para conectar novamente",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "Sair",
+          onPress: () => signOut(),
+        },
+      ]
+    );
+    signOut();
+  };
+
   return (
     <KeyboardAvoidingView behavior="position" enabled>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -74,7 +128,7 @@ export const Profile = () => {
             <HeaderTop>
               <BackButton color={theme.colors.shape} onPress={handleBack} />
               <HeaderTitle>Editar Perfil</HeaderTitle>
-              <LogoutButton onPress={signOut}>
+              <LogoutButton onPress={handleSignOut}>
                 <Feather name="power" size={24} color={theme.colors.shape} />
               </LogoutButton>
             </HeaderTop>
@@ -139,6 +193,7 @@ export const Profile = () => {
                 <PasswordInput iconName="lock" placeholder="Repetir senha" />
               </Section>
             )}
+            <Button title="Salvar alterações" onPress={handleProfileUpdate} />
           </Content>
         </Container>
       </TouchableWithoutFeedback>
